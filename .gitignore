@@ -22,3 +22,7 @@ __pycache__/
 # ===== OS =====
 .DS_Store
 Thumbs.db
+
+# ===== ROS2 Package Setup =====
+setup.cfg
+setup.py
