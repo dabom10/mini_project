@@ -10,7 +10,7 @@ class CarDetectionNode(Node):
     def __init__(self):
         super().__init__('find_car')
 
-        self.model = YOLO('/home/rokey/rokey_ws/car.pt')
+        self.model = YOLO('/home/rokey/mini_project/webcam/car.pt')
         self.cap   = cv2.VideoCapture(2)
         self.pub   = self.create_publisher(Bool, 'car_detecting', 10)
 
