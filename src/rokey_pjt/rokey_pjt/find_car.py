@@ -14,14 +14,20 @@ class CarDetectionNode(Node):
         self.cap   = cv2.VideoCapture(2)
         self.pub   = self.create_publisher(Bool, 'car_detecting', 10)
 
-        self._detected_time = None  # 최초 감지 시각
+        self._detected_time = None
 
         self.create_timer(0.033, self.process_frame)
         self.get_logger().info('노드 시작')
 
+    def _reconnect(self):
+        self.get_logger().warn('웹캠 읽기 실패 — 재연결 시도')
+        self.cap.release()
+        self.cap = cv2.VideoCapture(2)
+
     def process_frame(self):
         ret, frame = self.cap.read()
         if not ret:
+            self._reconnect()
             return
 
         results      = self.model(frame, verbose=False)[0]
@@ -41,7 +47,7 @@ class CarDetectionNode(Node):
 
         elapsed = now - self._detected_time
 
-        if elapsed >= 6.0:  # 1초 대기 + 5초 발행
+        if elapsed >= 6.0:
             self.get_logger().info('발행 완료 → 노드 종료')
             raise SystemExit
 
